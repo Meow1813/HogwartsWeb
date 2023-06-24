@@ -15,18 +15,20 @@ public class FacultyController {
     public FacultyController(FacultyService facultyService) {
         this.facultyService = facultyService;
     }
+
     @GetMapping("{id}")
     public ResponseEntity<Faculty> getFaculty(@PathVariable Long id) {
-       Faculty faculty = facultyService.findFaculty(id);
+        Faculty faculty = facultyService.findFaculty(id);
         if (faculty == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(faculty);
     }
+
     @GetMapping("/color/{color}")
-    public ResponseEntity<Collection<Faculty>> getFacultyByColor(@PathVariable String color){
+    public ResponseEntity<Collection<Faculty>> getFacultyByColor(@PathVariable String color) {
         Collection<Faculty> result = facultyService.getFacultiesByColor(color);
-        if (result.size()==0){
+        if (result.size() == 0) {
             ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(result);
@@ -47,7 +49,8 @@ public class FacultyController {
     }
 
     @DeleteMapping("{id}")
-    public Faculty deleteFaculty(@PathVariable Long id) {
-        return facultyService.deleteFaculty(id);
+    public ResponseEntity deleteFaculty(@PathVariable Long id) {
+        facultyService.deleteFaculty(id);
+        return ResponseEntity.ok().build();
     }
 }
