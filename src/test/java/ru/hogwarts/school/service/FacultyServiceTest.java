@@ -55,14 +55,14 @@ class FacultyServiceTest {
     void getFacultiesByColorTrue() {
         List<Faculty> list = new ArrayList<>(List.of(new Faculty(1L, "first", "red"),
                 new Faculty(2L, "second", "red")));
-        when(repository.findByColor("red")).thenReturn(list);
+        when(repository.findByColorIgnoreCase("red")).thenReturn(list);
         assertEquals(list, out.getFacultiesByColor("red"));
     }
 
     @Test
     void getFacultiesByColorFalse() {
         List<Faculty> list = new ArrayList<>();
-        when(repository.findByColor("green")).thenReturn(list);
+        when(repository.findByColorIgnoreCase("green")).thenReturn(list);
         assertEquals(list, out.getFacultiesByColor("green"));
     }
 
