@@ -64,7 +64,7 @@ public class StudentController {
         return ResponseEntity.ok(result);
     }
 
-     @GetMapping("/faculty/{id}")
+    @GetMapping("/faculty/{id}")
     public ResponseEntity facultyByStudent(@PathVariable long id) {
         Faculty foundFaculty = studentService.getStudentFaculty(id);
         if (foundFaculty == null) {
@@ -73,6 +73,20 @@ public class StudentController {
         return ResponseEntity.ok(foundFaculty);
     }
 
+    @GetMapping("/count")
+    public int getStudentCount() {
+        return studentService.getStudentCount();
+    }
+
+    @GetMapping("/avg-age")
+    public int getStudentAvgAge() {
+        return studentService.getStudentAvgAge();
+    }
+
+    @GetMapping("/last5")
+    public Collection<Student> getLast5Students(){
+        return studentService.getLast5Student();
+    }
 }
 
 
