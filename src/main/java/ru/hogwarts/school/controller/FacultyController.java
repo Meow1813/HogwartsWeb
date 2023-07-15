@@ -1,5 +1,7 @@
 package ru.hogwarts.school.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
@@ -12,6 +14,7 @@ import java.util.Collection;
 @RequestMapping("faculty")
 public class FacultyController {
     private final FacultyService facultyService;
+    Logger logger = LoggerFactory.getLogger(FacultyController.class);
 
 
     public FacultyController(FacultyService facultyService) {
@@ -22,6 +25,7 @@ public class FacultyController {
     public ResponseEntity<Faculty> getFaculty(@PathVariable Long id) {
         Faculty faculty = facultyService.findFaculty(id);
         if (faculty == null) {
+            logger.error("There is not faculty with id = " + id);
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(faculty);
@@ -31,6 +35,7 @@ public class FacultyController {
     public ResponseEntity<Collection<Faculty>> getFacultyByColor(@PathVariable String color) {
         Collection<Faculty> result = facultyService.getFacultiesByColor(color);
         if (result.size() == 0) {
+            logger.error("There is not faculty with color = " + color);
             ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(result);
@@ -45,6 +50,7 @@ public class FacultyController {
     public ResponseEntity<Faculty> editFaculty(@RequestBody Faculty faculty) {
         Faculty foundFaculty = facultyService.editFaculty(faculty);
         if (foundFaculty == null) {
+            logger.error("There is not faculty with id = " + faculty.getId());
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(foundFaculty);
@@ -60,6 +66,7 @@ public class FacultyController {
     public ResponseEntity<Collection<Faculty>> getFacultyByColorOrName(@PathVariable String colorOrName) {
         Collection<Faculty> result = facultyService.getFacultiesByColorOrName(colorOrName);
         if (result.size() == 0) {
+            logger.error("There is not faculty with color or name = " + colorOrName);
             ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(result);
@@ -69,6 +76,7 @@ public class FacultyController {
     public ResponseEntity<Collection<Student>> getStudentsByFaculty(@PathVariable long id) {
         Collection<Student> result = facultyService.getFacultyStudents(id);
         if (result.size() == 0) {
+            logger.error("There is not students with faculty id = " + id);
             ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(result);

@@ -1,5 +1,7 @@
 package ru.hogwarts.school.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
@@ -12,6 +14,7 @@ import java.util.Collection;
 @RequestMapping("student")
 public class StudentController {
     private final StudentService studentService;
+    Logger logger = LoggerFactory.getLogger(StudentController.class);
 
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
@@ -21,6 +24,7 @@ public class StudentController {
     public ResponseEntity<Student> getStudent(@PathVariable Long id) {
         Student student = studentService.findStudent(id);
         if (student == null) {
+            logger.error("There is not student with id = " + id);
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(student);
@@ -30,6 +34,7 @@ public class StudentController {
     public ResponseEntity<Collection<Student>> getStudentByAge(@PathVariable int age) {
         Collection<Student> result = studentService.getStudentsByAge(age);
         if (result.size() == 0) {
+            logger.error("There is not student with age = " + age);
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(result);
@@ -44,6 +49,7 @@ public class StudentController {
     public ResponseEntity<Student> editStudent(@RequestBody Student student) {
         Student foundStudent = studentService.editStudent(student);
         if (foundStudent == null) {
+            logger.error("There is not student with id = " + student.getId());
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(foundStudent);
@@ -59,6 +65,7 @@ public class StudentController {
     public ResponseEntity<Collection<Student>> getStudentByAgeBetween(@RequestParam int min, @RequestParam int max) {
         Collection<Student> result = studentService.getStudentsByAgeBetween(min, max);
         if (result.size() == 0) {
+            logger.error("There is not students with age between {} and {}", min, max);
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(result);
@@ -84,7 +91,7 @@ public class StudentController {
     }
 
     @GetMapping("/last5")
-    public Collection<Student> getLast5Students(){
+    public Collection<Student> getLast5Students() {
         return studentService.getLast5Student();
     }
 }
