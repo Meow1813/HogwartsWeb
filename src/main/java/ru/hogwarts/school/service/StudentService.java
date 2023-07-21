@@ -8,6 +8,8 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class StudentService {
@@ -71,5 +73,25 @@ public class StudentService {
     public Collection<Student> getLast5Student() {
         logger.info("Was invoked method for get last 5 students");
         return studentRepository.getLast5Students();
+    }
+
+    public Collection<String> getNameList() {
+        return studentRepository.findAll().stream()
+                .map(s -> s.getName().toUpperCase())
+                .filter(n -> n.startsWith("A"))
+                .sorted().collect(Collectors.toList());
+    }
+
+    public double getStudentAvgAgeByStream() {
+        return studentRepository.findAll().stream().mapToInt(Student::getAge).average().getAsDouble();
+    }
+
+    public int getNumber() {
+
+        return Stream.iterate(1, a -> a + 1)
+                .limit(1_000_000)
+                .reduce(0, (a, b) -> a + b);//распараллеливание стрима только замедляет скорость выполнения, поэтому оставил все так
+
+
     }
 }
