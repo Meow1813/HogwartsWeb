@@ -8,6 +8,7 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -93,5 +94,48 @@ public class StudentService {
                 .reduce(0, (a, b) -> a + b);//распараллеливание стрима только замедляет скорость выполнения, поэтому оставил все так
 
 
+    }
+
+    public void studentThread() {
+        List<Student> studentList = studentRepository.findAll();
+        System.out.println("************************");
+
+        System.out.println(studentList.get(0));
+        System.out.println(studentList.get(1));
+
+        new Thread(() -> {
+            System.out.println(studentList.get(2));
+            System.out.println(studentList.get(3));
+        }).start();
+        new Thread(() -> {
+            System.out.println(studentList.get(4));
+            System.out.println(studentList.get(5));
+        }).start();
+    }
+private static final Object flag = new Object();
+    public void synchronizedStudentThread() throws InterruptedException {
+        List<Student> studentList = studentRepository.findAll();
+        System.out.println("************************");
+            printStudent(studentList.get(0));
+            printStudent(studentList.get(1));
+
+            var t1 = new Thread(() -> {
+                printStudent(studentList.get(2));
+                printStudent(studentList.get(3));
+            });
+            var t2 = new Thread(() -> {
+                printStudent(studentList.get(4));
+                printStudent(studentList.get(5));
+            });
+            t1.start();
+            t1.join();
+            t2.start();
+            t2.join();
+    }
+
+    private static void printStudent(Student student){
+        synchronized (flag) {
+            System.out.println(student);
+        }
     }
 }
